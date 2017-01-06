@@ -16,7 +16,6 @@
 # Author: Lars Schneider, http://larsxschneider.github.io/
 #
 
-git log --diff-filter=D --summary |
     grep 'delete mode ...... ' |
     sed 's/delete mode ...... //' |
     # Ignore paths with a ' as xargs trips over this.
@@ -28,3 +27,4 @@ git log --diff-filter=D --summary |
     sort | \
     uniq -c | \
     sort -n -r
+git -c diff.renameLimit=10000 log --diff-filter=D --summary |
