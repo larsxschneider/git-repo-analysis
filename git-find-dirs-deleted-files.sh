@@ -16,15 +16,18 @@
 # Author: Lars Schneider, http://larsxschneider.github.io/
 #
 
-    grep 'delete mode ...... ' |
-    sed 's/delete mode ...... //' |
-    # Ignore paths with a ' as xargs trips over this.
-    # c.f. http://stackoverflow.com/questions/11649872/getting-error-xargs-unterminated-quote-when-tried-to-print-the-number-of-lines
-    grep -v "'" |
-    grep -v '"' |
-    xargs -n 1 dirname | \
-    xargs -I % sh -c 'D="%"; if ! [ -d "$D" ]; then while ! test -d $(dirname "$D"); do D=$(dirname "$D"); done; echo "deleted $D"; else echo "present $D"; fi;' | \
-    sort | \
-    uniq -c | \
-    sort -n -r
 git -c diff.renameLimit=10000 log --diff-filter=D --summary |
+    grep ' delete mode ...... ' |
+    sed 's/ delete mode ...... //' |
+    while read -r F ; do
+        D=$(dirname "$F");
+        if ! [ -d "$D" ]; then
+            while ! [ -d "$(dirname "$D")" ] ; do D=$(dirname "$D"); done;
+            echo "deleted $D";
+        else
+            echo "present $D";
+        fi;
+    done |
+    sort |
+    uniq -c |
+    sort -k 2,2 -r
