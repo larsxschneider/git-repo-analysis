@@ -30,7 +30,7 @@ if len(sys.argv):
 else:
     THRESHOLD_IN_MB = 0.5
 
-COLUMN_WIDHT = 60
+COLUMN_WIDTH = 60
 cwd = os.getcwd()
 result = {}
 
@@ -45,7 +45,7 @@ def is_binary(filename):
         CHUNKSIZE = 1024
         while 1:
             chunk = fin.read(CHUNKSIZE)
-            if '\0' in chunk: # found null byte
+            if b'\0' in chunk: # found null byte
                 return True
             if len(chunk) < CHUNKSIZE:
                 break # done
@@ -67,15 +67,15 @@ def add_file(ext, size_mb):
         result[ext]['min'] = size_mb
 
 def print_line(ext, share_large, count_large, count_all, size_all, min, max):
-    print '{}{}{}{}{}{}{}'.format(
-        ext.ljust(COLUMN_WIDHT),
+    print('{}{}{}{}{}{}{}'.format(
+        ext.ljust(COLUMN_WIDTH),
         str(share_large).rjust(10),
         str(count_large).rjust(10),
         str(count_all).rjust(10),
         str(size_all).rjust(10),
         str(min).rjust(10),
         str(max).rjust(10)
-    )
+    ))
 
 for root, dirs, files in os.walk(cwd):
     for basename in files:
@@ -93,8 +93,8 @@ for root, dirs, files in os.walk(cwd):
                     ext = ext[ext.find('.')+1:]
                     if ext.find('.') <= 0:
                         add_file(file_type + "  -  " + ext, size_mb)
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
 
 print_line('Extension', 'LShare', 'LCount', 'Count', 'Size', 'Min', 'Max')
 print_line('-------','-------','-------','-------','-------','-------','-------')
