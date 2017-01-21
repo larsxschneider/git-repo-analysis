@@ -33,8 +33,9 @@ else:
 
 CWD = os.getcwd()
 CHUNKSIZE = 1024
+MAX_TYPE_LEN = len("Type")
+MAX_EXT_LEN = len("Extension")
 result = {}
-max_ext_len = len("Extension")
 
 def is_binary(filename):
     """Return true if the given filename is binary.
@@ -55,6 +56,10 @@ def is_binary(filename):
     return False
 
 def add_file(ext, type, size_mb):
+    global MAX_EXT_LEN
+    MAX_EXT_LEN = max(MAX_EXT_LEN, len(ext))
+    global MAX_TYPE_LEN
+    MAX_TYPE_LEN = max(MAX_TYPE_LEN, len(type))
     if ext not in result:
         result[ext] = {
             'ext' : ext,
@@ -76,8 +81,8 @@ def add_file(ext, type, size_mb):
 
 def print_line(type, ext, share_large, count_large, count_all, size_all, min, max):
     print('{}{}{}{}{}{}{}{}'.format(
-        type.ljust(10),
-        ext.ljust(3+max_ext_len),
+        type.ljust(3+MAX_TYPE_LEN),
+        ext.ljust(3+MAX_EXT_LEN),
         str(share_large).rjust(10),
         str(count_large).rjust(10),
         str(count_all).rjust(10),
@@ -96,13 +101,17 @@ for root, dirs, files in os.walk(CWD):
                     file_type = "binary"
                 else:
                     file_type = "text"
-                ext = filename
+                ext = os.path.basename(filename)
                 add_file('*', 'all', size_mb)
-                while ext.find('.') >= 0:
-                    ext = ext[ext.find('.')+1:]
-                    if ext.find('.') <= 0:
-                        add_file(ext, file_type, size_mb)
-                        max_ext_len = max(max_ext_len, len(ext))
+                if ext.find('.') == -1:
+                    # files w/o extension
+                    add_file(ext, file_type + " w/o ext", size_mb)
+                else:
+                    while ext.find('.') >= 0:
+                        ext = ext[ext.find('.')+1:]
+                        if ext.find('.') <= 0:
+                            add_file(ext, file_type, size_mb)
+
         except Exception as e:
             print(e)
 
@@ -116,7 +125,7 @@ for ext in sorted(result, key=lambda x: (result[x]['type'], -result[x]['size_lar
         print_line(
             result[ext]['type'],
             ext,
-            str(large_share) + ' %',
+            str(round(large_share)) + ' %',
             result[ext]['count_large'],
             result[ext]['count_all'],
             int(result[ext]['size_all']),
