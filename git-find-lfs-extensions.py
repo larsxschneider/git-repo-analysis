@@ -116,7 +116,7 @@ for ext in sorted(result, key=lambda x: (result[x]['type'], -result[x]['size_lar
         print_line(
             result[ext]['type'],
             ext,
-            str(large_share) + ' %',
+            str(round(large_share)) + ' %',
             result[ext]['count_large'],
             result[ext]['count_all'],
             int(result[ext]['size_all']),
