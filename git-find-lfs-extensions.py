@@ -101,12 +101,17 @@ for root, dirs, files in os.walk(CWD):
                     file_type = "binary"
                 else:
                     file_type = "text"
-                ext = filename
+                ext = os.path.basename(filename)
                 add_file('*', 'all', size_mb)
-                while ext.find('.') >= 0:
-                    ext = ext[ext.find('.')+1:]
-                    if ext.find('.') <= 0:
-                        add_file(ext, file_type, size_mb)
+                if ext.find('.') == -1:
+                    # files w/o extension
+                    add_file(ext, file_type + " w/o ext", size_mb)
+                else:
+                    while ext.find('.') >= 0:
+                        ext = ext[ext.find('.')+1:]
+                        if ext.find('.') <= 0:
+                            add_file(ext, file_type, size_mb)
+
         except Exception as e:
             print(e)
 
