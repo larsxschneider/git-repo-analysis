@@ -138,5 +138,5 @@ print("\nAdd to .gitattributes:\n")
 for ext in sorted(result, key=lambda x: (result[x]['type'], x)):
     if len(ext) > 0 and result[ext]['type'] == "binary" and result[ext]['count_large'] > 0:
         print('*.{} filter=lfs diff=lfs merge=lfs -text'.format(
-            "".join(c if ('0' <= c <= '9') else "[" + c.upper() + c.lower() + "]" for c in ext)
+            "".join("[" + c.upper() + c.lower() + "]" if (('a' <= c <= 'z') or ('A' <= c <= 'Z')) else c for c in ext)
         ))
