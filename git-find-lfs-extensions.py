@@ -56,6 +56,7 @@ def is_binary(filename):
     return False
 
 def add_file(ext, type, size_mb):
+    ext = ext.lower()
     global MAX_EXT_LEN
     MAX_EXT_LEN = max(MAX_EXT_LEN, len(ext))
     global MAX_TYPE_LEN
