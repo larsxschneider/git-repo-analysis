@@ -35,7 +35,7 @@ OBJECTS=$(
 )
 
 for OBJ in $OBJECTS; do
-    # extract the compressed size in bytes
+    # extract the compressed size in kilobytes
     COMPRESSED_SIZE=$(($(echo $OBJ | cut -f 6 -d ' ')/1024))
 
     if [ $COMPRESSED_SIZE -le $MIN_SIZE_IN_KB ]; then
