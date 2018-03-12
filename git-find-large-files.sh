@@ -10,8 +10,9 @@
 # Files that have a large compressed size should usually be stored in
 # Git LFS.
 #
-# Based on script from Antony Stubbs:
-# http://stubbisms.wordpress.com/2009/07/10/git-script-to-show-largest-pack-objects-and-trim-your-waist-line/
+# Based on script from Antony Stubbs [1] and
+# improved with ideas from Peff.
+# [1] http://stubbisms.wordpress.com/2009/07/10/git-script-to-show-largest-pack-objects-and-trim-your-waist-line/
 #
 # Author: Lars Schneider, http://larsxschneider.github.io/
 #
@@ -28,22 +29,22 @@ IFS=$'\n';
 
 # list all objects including their size, sort by compressed size
 OBJECTS=$(
-    git verify-pack -v .git/objects/pack/pack-*.idx |
-    grep blob |
-    grep -v chain |
-    sort -k4nr
+    git cat-file \
+        --batch-all-objects \
+        --batch-check='%(objectsize:disk) %(objectname)' \
+    | sort -nr
 )
 
 for OBJ in $OBJECTS; do
     # extract the compressed size in kilobytes
-    COMPRESSED_SIZE=$(($(echo $OBJ | cut -f 6 -d ' ')/1024))
+    COMPRESSED_SIZE=$(($(echo $OBJ | cut -f 1 -d ' ')/1024))
 
     if [ $COMPRESSED_SIZE -le $MIN_SIZE_IN_KB ]; then
         break
     fi
 
     # extract the SHA
-    SHA=$(echo $OBJ | cut -f 1 -d ' ')
+    SHA=$(echo $OBJ | cut -f 2 -d ' ')
 
     # find the objects location in the repository tree
     LOCATION=$(git rev-list --all --objects | grep $SHA | sed "s/$SHA //")
