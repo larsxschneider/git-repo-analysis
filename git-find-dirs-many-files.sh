@@ -20,7 +20,7 @@ else
 fi
 
 IFS=$'\n';
-DIRS=$(find . -type d -not -path "./.git/*" -exec bash -c 'COUNT=$(find "$0" -type f | wc -l); echo "$COUNT $0"' {} \; | sort -r)
+DIRS=$(find . -type d -not -path "./.git/*" -exec bash -c 'COUNT=$(find "$0" -type f | wc -l); echo "$COUNT $0"' {} \; | sort -nr)
 
 for DIR in $DIRS; do
     if [ $(($(echo $DIR | sed 's/\..*//'))) -le $FILE_COUNT ]; then
