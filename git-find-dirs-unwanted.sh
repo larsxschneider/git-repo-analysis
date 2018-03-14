@@ -15,7 +15,7 @@
 # Author: Lars Schneider, http://larsxschneider.github.io/
 #
 
-DIRS=$(git log --all --name-only --pretty=format: \
+DIRS=$(git -c diff.renameLimit=30000 log --all --name-only --pretty=format: \
     | awk -F'[^/]*$' '{print $1}' \
     | sort -u \
     | grep -i \
