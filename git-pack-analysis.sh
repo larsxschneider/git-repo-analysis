@@ -49,10 +49,12 @@ function run {
 mkdir -p "$TEMP_DIR"
 pushd "$TEMP_DIR"
     printf "\n#### REPO PACK BENCHMARK ###\n"
-    printf "$REPO_URL\n"
+    git --version
+    printf "System:    "; uname;
+    printf "Repo URL:  $REPO_URL\n"
 
     if test -d base; then
-        echo "$(tput setaf 1)Repo already exists - reusing! Delete $TEMP_DIR for a clean run!$(tput sgr0)"
+        printf "$(tput setaf 1)Repo already exists - reusing! Delete $TEMP_DIR for a clean run!$(tput sgr0)\n"
     else
         git clone --bare $REPO_URL base
     fi
