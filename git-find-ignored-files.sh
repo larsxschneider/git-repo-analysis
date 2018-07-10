@@ -20,7 +20,15 @@ then
 	exit 1
 fi
 
-command="git ls-files --ignored --exclude-standard -z | xargs -0r du -sh"
+xargs_test_r_option=$((echo | xargs -r ls &> /dev/null); echo $?)
+xargs="xargs -0"
+
+if [[ $xargs_test_r_option -eq 0 ]]
+then
+	xargs="$xargs -r"
+fi
+
+command="git ls-files --ignored --exclude-standard -z | $xargs du -sh"
 
 case "$1" in
 	-h|--help)
