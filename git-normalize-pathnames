@@ -1,0 +1,113 @@
+#!/usr/bin/perl
+#
+# Normalize pathname casing in Git repositories. This makes it easier for
+# `git log` to visualize the history of a file.
+#
+# Usage:
+#   git-normalize-pathnames
+#
+
+use strict;
+use warnings;
+
+print "Scanning repo...\n";
+
+# Query all pathnames ever used in the Git repo in new to old order
+my @pathnames
+    = `git -c diff.renameLimit=0 log --branches --name-only --pretty=format:`;
+
+# Generate list of case sensitive unique pathnames
+my %seen_cs;
+my @unique;
+for my $p (@pathnames) {
+    next if $seen_cs{$p}++;
+    push( @unique, $p );
+}
+
+# Generate list of case insensitive unique pathnames
+my %seen_ci;
+my @unique_i;
+for my $p (@unique) {
+    next if $seen_ci{ lc($p) }++;
+    push( @unique_i, $p );
+}
+
+# Generate list of pathnames that have multiple case variants
+my @dups;
+for my $p (@unique_i) {
+    next if $seen_ci{ lc($p) } < 2;
+    push( @dups, $p );
+}
+
+if ( scalar @dups == 0 ) {
+    print "\nNo pathname issues detected.\n";
+    exit 0;
+}
+
+print "\nPathname issues detected:\n";
+for my $p (@dups) {
+    print " " . $p;
+}
+print "\nRewriting history...\n";
+
+# TODO: check file touched twice?
+
+my %seen;
+my $skip = 0;
+open( my $pipe_in, "git fast-export --progress=100 --no-data HEAD |" ) or die $!;
+open( my $pipe_out, "| git fast-import --force --quiet" ) or die $!;
+while ( my $row = <$pipe_in> ) {
+    if ( length($row) > $skip ) {
+        my $s = $skip;
+        $skip = 0;
+        my $cmd = substr( $row, $s );
+
+        # skip data blocks
+        if ( $cmd =~ /^data ([0-9]+)$/ ) {
+            $skip = $1;
+        }
+        # ignore empty lines
+        elsif ( $cmd =~ /^$/ ) { }
+        # ignore commands
+        elsif ( $cmd =~ /^(reset|blob|checkpoint|progress|feature|option|done|from|mark|author|from)/ ) { }
+        elsif ( $cmd =~ /^(commit|tag|merge)/ ) {
+            %seen = ();
+        }
+        elsif ( $cmd =~ /^M [0-9]{6} [0-9a-f]{40} .+/ ) {
+            for my $p (@dups) {
+                if ( $cmd =~ s/$p/$p/i ) {
+                    # print "M" . $p . "\n";
+                    $seen{ $p }++;
+                    $row = substr( $row, 0, $s ) . $cmd;
+                    last;
+                }
+            }
+        }
+        # rewrite path names
+        elsif ( $cmd =~ /^D .+/ ) {
+            for my $p (@dups) {
+                if ( $cmd =~ s/$p/$p/i ) {
+                     # print "D" . $p . "\n";
+                    if ( $seen{ $p } ) {
+                        $cmd = "";
+                    }
+                    $row = substr( $row, 0, $s ) . $cmd;
+                    last;
+                }
+            }
+        }
+        else {
+            die "Unknown command:\n" . $cmd . "\nIn row:\n" . $row;
+        }
+    }
+    elsif ( $skip > 0 ) {
+        $skip -= length($row);
+    }
+    else {
+        die "Skipping data block failed: " . $skip;
+    }
+
+    print {$pipe_out} $row;
+}
+
+print "Done!\n";
