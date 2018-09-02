@@ -20,8 +20,9 @@ use warnings;
 print "Scanning repo...\n";
 
 # Query all pathnames ever used in the Git repo in new to old order
+# Also disable all rename detection
 my @pathnames
-    = `git -c diff.renameLimit=0 log --branches --name-only --pretty=format:`;
+    = `git -c diff.rename=0 log --branches --name-only --pretty=format:`;
 
 # Generate list of case sensitive unique pathnames
 my %seen_cs;
