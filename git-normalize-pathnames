@@ -3,6 +3,13 @@
 # Normalize pathname casing in Git repositories. This makes it easier for
 # `git log` to visualize the history of a file.
 #
+# TODO: This script detects only pathnames that have changed their casing!
+#       It does not yet detect subset of pathnames that have different casing
+#       and live next to each other. E.g.:
+#         /foo/bar1
+#         /Foo/bar2
+#
+#
 # Usage:
 #   git-normalize-pathnames
 #
@@ -18,23 +25,23 @@ my @pathnames
 
 # Generate list of case sensitive unique pathnames
 my %seen_cs;
-my @unique;
+my @unique_cs;
 for my $p (@pathnames) {
     next if $seen_cs{$p}++;
-    push( @unique, $p );
+    push( @unique_cs, $p );
 }
 
 # Generate list of case insensitive unique pathnames
 my %seen_ci;
-my @unique_i;
-for my $p (@unique) {
+my @unique_ci;
+for my $p (@unique_cs) {
     next if $seen_ci{ lc($p) }++;
-    push( @unique_i, $p );
+    push( @unique_ci, $p );
 }
 
 # Generate list of pathnames that have multiple case variants
 my @dups;
-for my $p (@unique_i) {
+for my $p (@unique_ci) {
     next if $seen_ci{ lc($p) } < 2;
     push( @dups, $p );
 }
