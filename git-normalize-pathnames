@@ -83,7 +83,7 @@ while ( my $row = <$pipe_in> ) {
         }
         elsif ( $cmd =~ /^M [0-9]{6} [0-9a-f]{40} .+/ ) {
             for my $p (@dups) {
-                if ( $cmd =~ s/$p/$p/i ) {
+                if ( $cmd =~ s/\Q$p\E/\Q$p\E/i ) {
                     # print "M" . $p . "\n";
                     $seen{ $p }++;
                     $row = substr( $row, 0, $s ) . $cmd;
@@ -94,7 +94,7 @@ while ( my $row = <$pipe_in> ) {
         # rewrite path names
         elsif ( $cmd =~ /^D .+/ ) {
             for my $p (@dups) {
-                if ( $cmd =~ s/$p/$p/i ) {
+                if ( $cmd =~ s/\Q$p\E/\Q$p\E/i ) {
                      # print "D" . $p . "\n";
                     if ( $seen{ $p } ) {
                         $cmd = "";
