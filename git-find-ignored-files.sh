@@ -20,23 +20,12 @@ then
 	exit 1
 fi
 
-xargs_test_r_option=$((echo | xargs -r ls &> /dev/null); echo $?)
-xargs="xargs -0"
-
-if [[ $xargs_test_r_option -eq 0 ]]
-then
-	xargs="$xargs -r"
-fi
-
-command="git ls-files --ignored --exclude-standard -z | $xargs du -sh"
-
 case "$1" in
 	-h|--help)
 		print_help
 		exit 0
 		;;
 	-s|--sort-by-size)
-		command="$command | sort -h"
 		;;
 	*)
 		if [[ $# -gt 0 ]]
@@ -47,5 +36,29 @@ case "$1" in
 		fi
 		;;
 esac
+
+# Find all ignored files
+files=$(git ls-files --ignored --exclude-standard)
+
+# Stop if no ignored files were found
+if [[ -z $files ]]
+then
+	(>&2 echo "info: no ignored files in working tree or index")
+	exit 0
+fi
+
+# Compute the file sizes of all these files
+file_sizes=$(echo "$files" | tr '\n' '\0' | xargs -0 du -sh)
+
+# Obtain the origins why these files are ignored
+gitignore_origins=$(echo "$files" | git check-ignore --verbose --stdin --no-index)
+
+# Merge the two lists into one
+command="join -1 2 -2 2 -t $'\t' -o 1.1,1.2,2.1 <(echo \"$file_sizes\") <(echo \"$gitignore_origins\")"
+
+if [[ $1 =~ ^-s|--sort-by-size$ ]]
+then
+	command="$command | sort -h"
+fi
 
 eval "$command"
