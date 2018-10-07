@@ -5,9 +5,9 @@ Git can become slow if a repository exceeds certain thresholds ([read this for d
 _Hint:_ The scripts can run for a long time and output a lot lines. Pipe their output to a file (`./script > myfile`) for further processing.
 
 ## Large by File Size
-Use the [git-find-large-files](git-find-large-files) script to identity large files in your Git repository that you could move to [GitLFS](https://git-lfs.github.com/) (e.g. using [git-lfs-migrate](https://github.com/bozaro/git-lfs-migrate)).
+Use the [git-find-large-files](git-find-large-files) script to identity large files in your Git repository that you could move to [Git LFS](https://git-lfs.github.com/) (e.g. using [git-lfs-migrate](https://github.com/git-lfs/git-lfs/blob/master/docs/man/git-lfs-migrate.1.ronn)).
 
-Use the [git-find-lfs-extensions](git-find-lfs-extensions) script to identify certain file types that you could move to [GitLFS](https://git-lfs.github.com/).
+Use the [git-find-lfs-extensions](git-find-lfs-extensions) script to identify certain file types that you could move to [Git LFS](https://git-lfs.github.com/).
 
 ## Large by File Count
 Use the [git-find-dirs-many-files](git-find-dirs-many-files) and [git-find-dirs-unwanted](git-find-dirs-unwanted) scripts to identify directories with a large number of files. These might indicate 3rd party components that could be extracted.
