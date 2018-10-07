@@ -1,14 +1,15 @@
 #!/usr/bin/perl
 #
 # Normalize pathname casing in Git repositories. This makes it easier for
-# `git log` to visualize the history of a file.
+# `git log` to visualize the history of a file. E.g. if a file was renamed
+# from "/foo/BAR" to "/foo/bar" then Git (and GitHub!) would not show the
+# entire history of that file by default. This script fixes this!
 #
 # TODO: This script detects only pathnames that have changed their casing!
 #       It does not yet detect subset of pathnames that have different casing
 #       and live next to each other. E.g.:
 #         /foo/bar1
 #         /Foo/bar2
-#
 #
 # Usage:
 #   git-normalize-pathnames
