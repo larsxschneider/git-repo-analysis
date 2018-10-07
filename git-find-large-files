@@ -51,13 +51,13 @@ for OBJ in $OBJECTS; do
 
     if git rev-list --all --objects --max-count=1 | grep $SHA >/dev/null; then
         # Object is in the head revision
-        HEAD="Y"
+        HEAD="Present"
     elif [ -e $LOCATION ]; then
         # Objects path is in the head revision
-        HEAD="P"
+        HEAD="Changed"
     else
         # Object nor its path is in the head revision
-        HEAD="N"
+        HEAD="Deleted"
     fi
 
     OUTPUT="$OUTPUT\n$COMPRESSED_SIZE,$HEAD,$LOCATION"
