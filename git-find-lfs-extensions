@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 #
-# git-find-lfs-extensions.py [size threshold in KB]
-#
 # Identify file extensions in a directory tree that could be tracked
-# by GitLFS in a repository migration to Git.
+# by Git LFS in a repository migration to Git.
 #
 # Columns explanation:
 #   Type      = "binary" or "text".
@@ -20,8 +18,10 @@
 # Attention this script does only process a directory tree or Git HEAD
 # revision. Git history is not taken into account.
 #
-# Author: Lars Schneider, http://larsxschneider.github.io/
+# Usage:
+# git-find-lfs-extensions [size threshold in KB]
 #
+
 import os
 import sys
 

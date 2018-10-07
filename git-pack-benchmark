@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
 #
-# git-pack-analysis.sh
-#
 # Benchmark different `git repack` delta chains lengths for a given repo
 # based on the Peff's analysis discussed here:
 # https://github.com/git/git/commit/07e7dbf0db05a550a92a6a5a8977ac47efa7b794
 #
 # Usage:
-#   git-pack-analysis.sh <temp-dir> <repo-url>
-#
-# Author: Lars Schneider, http://larsxschneider.github.io/
+#   git-pack-banchmark <temp-dir> <repo-url>
 #
 
 TEMP_DIR=$1

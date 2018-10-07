@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 #
-# git-find-dirs-many-files.sh [file count threshold]
-#
 # Print directories with the number of files underneath them.
 #
-# A directory with a lot of files indicates a 3rd party component. These
-# are usually good candidates for exclusions in repository migrations to
-# Git.
+# A directory with a lot of files could indicates a 3rd party component.
+# These are usually good candidates for purging to make Git repositories
+# smaller (see `git-purge-files`).
 #
-# The script must be called in the Git root directory.
+# The script must be called from the root of the Git repository.
 #
-# Author: Lars Schneider, http://larsxschneider.github.io/
+# Usage:
+# git-find-dirs-many-files [file count threshold]
 #
 
 if [ -z "$1" ]; then

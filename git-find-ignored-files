@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 #
-# git-find-ignored-files.sh
+# Find all files present in the index and working tree ignored by .gitignore.
 #
-# Find all files present in the index and working tree ignored by .gitignore
-#
-# Usage: git-find-ignored-files [-s | --sort-by-size] [--help]
+# Usage:
+# git-find-ignored-files [-s | --sort-by-size] [--help]
 #
 # Author: Patrick Lühne, https://www.luehne.de/
 #

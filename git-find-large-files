@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 #
-# git-find-large-files.sh [size threshold in KB]
-#
 # Print the largest files in a Git repository. The script must be called
-# in the Git root directory. You can pass a threshold to print only files
-# greater than a certain size (compressed size in Git database, default
-# is 500kb).
+# from the root of the Git repository. You can pass a threshold to print
+# only files greater than a certain size (compressed size in Git database,
+# default is 500kb).
 #
 # Files that have a large compressed size should usually be stored in
-# Git LFS.
+# Git LFS [].
 #
-# Based on script from Antony Stubbs [1] and
-# improved with ideas from Peff.
+# Based on script from Antony Stubbs [1] and improved with ideas from Peff.
+#
 # [1] http://stubbisms.wordpress.com/2009/07/10/git-script-to-show-largest-pack-objects-and-trim-your-waist-line/
+# [2] https://git-lfs.github.com/
 #
-# Author: Lars Schneider, http://larsxschneider.github.io/
+# Usage:
+# git-find-large-files [size threshold in KB]
 #
 
 if [ -z "$1" ]; then

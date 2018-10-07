@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
 #
-# git-find-dirs-deleted-files.sh
-#
 # Print the number of deleted files per directory. The output indicates
 # if the directory is present in the HEAD revision.
 #
-# A deleted directory with a lot of files indicates a 3rd party component
-# that has been deleted. These are usually good candidates for exclusions
-# in repository migrations to Git.
+# A deleted directory with a lot of files could indicate a 3rd party
+# component that has been deleted. These are usually good candidates for
+# purging to make Git repositories smaller (see `git-purge-files`).
 #
-# The script must be called in the Git root directory.
+# The script must be called from the root of the Git repository.
+#
+# Usage:
+# git-find-dirs-deleted-files
 #
 # Output: [deleted file count] [directory still in HEAD revision?] [directory]
-#
-# Author: Lars Schneider, http://larsxschneider.github.io/
 #
 
 git -c diff.renameLimit=10000 log --diff-filter=D --summary |

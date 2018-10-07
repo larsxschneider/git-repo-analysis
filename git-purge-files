@@ -2,6 +2,11 @@
 #
 # Purge files from Git repositories.
 #
+# Attention:
+#     You want to run this script on a case sensitive file-system (e.g.
+#     ext4 on Linux). Otherwise the resulting Git repository will not
+#     contain changes that modify the casing of file paths.
+#
 # Usage:
 #     git-purge-files [path-regex1] [path-regex2] ...
 #
@@ -14,11 +19,6 @@
 #
 #    Remove all files in the "/foo" directory:
 #    git-purge-path "^/foo/$"
-#
-# Attention:
-#     You want to run this script on a case sensitive file-system (e.g.
-#     ext4 on Linux). Otherwise the resulting Git repository will not
-#     contain changes that modify the casing of file paths.
 #
 
 use strict;
