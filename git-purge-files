@@ -24,7 +24,7 @@
 use strict;
 use warnings;
 
-open( my $pipe_in, "git fast-export --progress=100 --no-data HEAD |" ) or die $!;
+open( my $pipe_in, "git fast-export --progress=100 --no-data --all |" ) or die $!;
 open( my $pipe_out, "| git fast-import --force --quiet" ) or die $!;
 
 LOOP: while ( my $cmd = <$pipe_in> ) {
