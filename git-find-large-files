@@ -69,6 +69,9 @@ for OBJ in $OBJECTS; do
     echo "$COMPRESSED_SIZE,$HEAD,$LOCATION" >> $TMP_DIR/output
 done
 
-column -t -s ',' < $TMP_DIR/output
+if [ -f "$TMP_DIR/output" ]; then
+    column -t -s ',' < "$TMP_DIR/output"
+fi
+
 rm -rf "$TMP_DIR"
 exit 0
