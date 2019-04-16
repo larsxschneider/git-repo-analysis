@@ -35,6 +35,12 @@ OBJECTS=$(
     | sort -nr
 )
 
+TMP=$(tempfile) || exit
+trap 'rm -f $TMP*' EXIT
+
+git rev-list --all --objects > $TMP.objects
+git rev-list --all --objects --max-count=1 > $TMP.objects.1
+
 for OBJ in $OBJECTS; do
     # extract the compressed size in kilobytes
     COMPRESSED_SIZE=$(($(echo $OBJ | cut -f 1 -d ' ')/1024))
@@ -47,9 +53,9 @@ for OBJ in $OBJECTS; do
     SHA=$(echo $OBJ | cut -f 2 -d ' ')
 
     # find the objects location in the repository tree
-    LOCATION=$(git rev-list --all --objects | grep $SHA | sed "s/$SHA //")
+    LOCATION=$(grep $SHA $TMP.objects | sed "s/$SHA //")
 
-    if git rev-list --all --objects --max-count=1 | grep $SHA >/dev/null; then
+    if grep $SHA $TMP.objects.1 >/dev/null; then
         # Object is in the head revision
         HEAD="Present"
     elif [ -e $LOCATION ]; then
@@ -60,7 +66,9 @@ for OBJ in $OBJECTS; do
         HEAD="Deleted"
     fi
 
-    OUTPUT="$OUTPUT\n$COMPRESSED_SIZE,$HEAD,$LOCATION"
+    echo "$COMPRESSED_SIZE,$HEAD,$LOCATION" >> $TMP.output
 done
 
-echo -e $OUTPUT | column -t -s ','
+column -t -s ',' < $TMP.output
+rm -f $TMP*
+exit 0

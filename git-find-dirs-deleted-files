@@ -15,7 +15,7 @@
 # Output: [deleted file count] [directory still in HEAD revision?] [directory]
 #
 
-git -c diff.renameLimit=10000 log --diff-filter=D --summary |
+git -c diff.renameLimit=30000 log --diff-filter=D --summary |
     grep ' delete mode ...... ' |
     sed 's/ delete mode ...... //' |
     while read -r F ; do
