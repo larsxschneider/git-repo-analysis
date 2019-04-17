@@ -23,6 +23,11 @@ else
     MIN_SIZE_IN_KB=$1
 fi
 
+# "look -b" is required on some Linux systems
+if look 2>&1 | grep -q .-b ; then
+    look_b=-b
+fi
+
 # set the internal field separator to line break,
 # so that we can iterate easily over the verify-pack output
 IFS=$'\n';
@@ -53,9 +58,8 @@ for OBJ in $OBJECTS; do
     SHA=$(echo $OBJ | cut -f 2 -d ' ')
 
     # find the objects location in the repository tree
-    LOCATION=$(look $SHA "$TMP_DIR/objects" | sed "s/$SHA //")
-
-    if look $SHA "$TMP_DIR/objects.1" >/dev/null; then
+    LOCATION=$(look $look_b $SHA "$TMP_DIR/objects" | sed "s/$SHA //")
+    if look $look_b $SHA "$TMP_DIR/objects.1" >/dev/null; then
         # Object is in the head revision
         HEAD="Present"
     elif [ -e $LOCATION ]; then
