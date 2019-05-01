@@ -24,7 +24,7 @@
 use strict;
 use warnings;
 
-open( my $pipe_in, "git fast-export --progress=100 --no-data --all --signed-tags=warn-strip --tag-of-filtered-object=rewrite |" ) or die $!;
+open( my $pipe_in, "git fast-export --progress=10000 --no-data --all --signed-tags=warn-strip --tag-of-filtered-object=rewrite |" ) or die $!;
 open( my $pipe_out, "| git fast-import --force --quiet" ) or die $!;
 
 LOOP: while ( my $cmd = <$pipe_in> ) {
