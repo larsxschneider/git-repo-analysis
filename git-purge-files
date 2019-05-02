@@ -24,7 +24,7 @@
 use strict;
 use warnings;
 
-my $path_regex = qr/join( "|", @ARGV )/;
+my $path_regex = join( "|", @ARGV );
 
 open( my $pipe_in, "git fast-export --progress=10000 --no-data --all --signed-tags=warn-strip --tag-of-filtered-object=rewrite |" ) or die $!;
 open( my $pipe_out, "| git fast-import --force --quiet" ) or die $!;
@@ -38,7 +38,7 @@ LOOP: while ( my $cmd = <$pipe_in> ) {
     }
     elsif ( $cmd =~ /^M [0-9]{6} [0-9a-f]{40} (.+)$/ ) {
         my $pathname = $1;
-        next LOOP if ("/" . $pathname) =~ /$path_regex/
+        next LOOP if ("/" . $pathname) =~ /$path_regex/o
     }
     print {$pipe_out} $cmd . $data;
 }
