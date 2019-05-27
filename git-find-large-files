@@ -40,7 +40,7 @@ OBJECTS=$(
     | sort -nr
 )
 
-TMP_DIR=$(mktemp -d "${TMPDIR:-/tmp/}git-find-large-files.XXXXXX") || exit
+TMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/git-find-large-files.XXXXXX") || exit
 trap "rm -rf '$TMP_DIR'" EXIT
 
 git rev-list --all --objects | sort > "$TMP_DIR/objects"
