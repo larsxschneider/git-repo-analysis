@@ -66,8 +66,8 @@ for OBJ in $OBJECTS; do
     SHA=$(echo $OBJ | cut -f 2 -d ' ')
 
     # find the objects location in the repository tree
-    LOCATION=$($search $look_b $SHA "$TMP_DIR/objects" | sed "s/$SHA //")
-    if $search $look_b $SHA "$TMP_DIR/objects.1" >/dev/null; then
+    LOCATION=$($search $SHA "$TMP_DIR/objects" | sed "s/$SHA //")
+    if $search $SHA "$TMP_DIR/objects.1" >/dev/null; then
         # Object is in the head revision
         HEAD="Present"
     elif [ -e $LOCATION ]; then
