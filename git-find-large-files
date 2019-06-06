@@ -6,7 +6,7 @@
 # default is 500kb).
 #
 # Files that have a large compressed size should usually be stored in
-# Git LFS [].
+# Git LFS [2].
 #
 # Based on script from Antony Stubbs [1] and improved with ideas from Peff.
 #
